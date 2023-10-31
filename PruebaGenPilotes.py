@@ -303,4 +303,54 @@ def generar_elementos_pilote(ctr1, MasaPilvc, MasaPilvg, Col_Masvc, Col_Masvg, C
 
     return filePiles
 
+def linkFun(NvTERR, num_pile, Fil_Masv, Pend, LinkSpac, Apoyos_Pil, Ly, LinkLim):
+    Link_V = []
+    NlinkV = []
+
+    Link_V.append(NvTERR - np.sum(Ly[:Fil_Masv[num_pile] - 1]) / Pend - 0.5 * LinkSpac[0])
+    H = Link_V[0]
+
+    cont = 1
+    Limit = 0
+    contLk = 1
+
+    while H > Apoyos_Pil:
+        H = H - LinkSpac[Limit]
+
+        if abs(H - Link_V[0] - 0.5 * LinkSpac[0]) - 1e-5 <= np.sum(LinkLim[:Limit + 1]):
+            Link_V.append(H)
+            cont += 1
+            contLk += 1
+        elif Limit < len(LinkLim) - 1:
+            H = Link_V[cont - 1] - 0.5 * (LinkSpac[Limit] + LinkSpac[Limit + 1])
+            Link_V.append(H)
+            NlinkV.append(contLk)
+            Limit += 1
+            cont += 1
+            contLk = 1
+        else:
+            H = Link_V[cont - 1] - LinkSpac[Limit]
+            Link_V.append(H)
+            cont += 1
+            contLk += 1
+
+    Link_V[-1] = Apoyos_Pil
+    NlinkV.append(contLk-1)
+    Link_V = np.array(Link_V)
+    NlinkV = np.array(NlinkV)
+
+    return Link_V, NlinkV
+
+def linkDic(MasaPil, Fil_Masv, Apoyos_Pil, LinkSpac, LinkLim, Ly, NvTERR, Pend):
+
+    VarLink = {}
+    Nlink = {}
+
+    for i in range(0,len(MasaPil)):
+        varLink, nlink = linkFun(NvTERR, i, Fil_Masv, Pend, LinkSpac, Apoyos_Pil[i], Ly, LinkLim)
+
+        VarLink[f"{i}"] =  varLink
+        Nlink[f"{i}"] = nlink
+
+    return VarLink, Nlink
 
