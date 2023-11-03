@@ -1,5 +1,6 @@
 import numpy as np
-from PruebaGenPilotes import generate_piles, generate_links, generar_elementos_pilote, calcular_coordenadas_placa
+import pandas as pd
+from PruebaGenPilotes import generate_pilescoord, generate_links, generate_piles, calcular_coordenadas_placa, generate_frames
 
 
 LinkLim = np.array([126/3,126/3,126/3,246,390])*0.0254  # Reemplaza esto con tus datos reales
@@ -33,12 +34,16 @@ Lz=1.75                                                                         
 
 
 Link_Vc, NlinkVc = generate_links(MasaPilvc, Fil_Masvc, Apoyos_Pilvc, LinkSpac, LinkLim, Ly, NvTERR, Pend)
-Pile_Vc = generate_piles(MasaPilvc, Apoyos_Pilvc, Link_Vc, NlinkVc, LinkSpac, Lz, LongDes, PileDiv)
+Pile_Vc = generate_pilescoord(Apoyos_Pilvc, Link_Vc, NlinkVc, LinkSpac, Lz, LongDes, PileDiv)
 
 Link_Vg, NlinkVg = generate_links(MasaPilvg, Fil_Masvg, Apoyos_Pilvg, LinkSpac, LinkLim, Ly, NvTERR, Pend)
-Pile_Vg = generate_piles(MasaPilvg, Apoyos_Pilvg, Link_Vg, NlinkVg, LinkSpac, Lz, LongDes, PileDiv)
+Pile_Vg = generate_pilescoord(Apoyos_Pilvg, Link_Vg, NlinkVg, LinkSpac, Lz, LongDes, PileDiv)
 
 Coord = calcular_coordenadas_placa(Lx, Ly, Lz, N)
 # print(Coord['x_coords'][0])
-resultado = generar_elementos_pilote(ctr1, MasaPilvc, MasaPilvg, Col_Masvc, Col_Masvg, Coord, Fil_Masvc, Fil_Masvg, Pile_Vc, Pile_Vg, OrdenPile)
-print(resultado)
+Pilotes = generate_piles(ctr1, MasaPilvc, MasaPilvg, Col_Masvc, Col_Masvg, Coord, Fil_Masvc, Fil_Masvg, Pile_Vc, Pile_Vg, OrdenPile)
+Frames = generate_frames(Coord, Col_Masvc, Fil_Masvg)
+
+print(Frames)
+
+# pd.DataFrame(Frames["F_PILE"]).to_csv("Datos.csv")

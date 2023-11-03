@@ -1,5 +1,5 @@
 import numpy as np
-from PruebaGenPilotes import linkDic,linkFun
+from PruebaGenPilotes import linkDic,linkFun, generate_piles
 from itertools import zip_longest
 
 NvTERR = -0.2457
@@ -10,6 +10,9 @@ LinkSpac= np.array([12,12,12,24,48])*0.0254
 LinkLim = np.array([126/3,126/3,126/3,246,390])*0.0254
 Apoyos_Pil = np.array([-17.,-19.,-21.,-23.])
 MasaPilvc = np.array([2.246,3.124,4.002,4.88])*9.81
+Lz=1.75
+LongDes = 2.
+PileDiv = np.array([1, 1, 1, 1, 1])
 # num_pilotes = 4
 #
 # Link_V = np.zeros((1, 4))
@@ -70,6 +73,47 @@ MasaPilvc = np.array([2.246,3.124,4.002,4.88])*9.81
 #     # Nlink = np.array(list(Nlink))
 #     return VarLink, Nlink
 
+# def generate_piles(Apoyos_Pil, Link_V, NlinkV, LinkSpac, Lz, LongDes, PileDiv):
+#     num_pilotes = Link_V.__len__()
+#
+#     Pile_V = {}
+#
+#     for i in range(num_pilotes):
+#         print(f"{i}")
+#         pile_V = []
+#         linkVal = Link_V[f"{i}"]
+#         nlinkVal = NlinkV[f"{i}"]
+#
+#         pile_V.append(Lz)
+#         pile_V.append(Lz - LongDes)
+#         cont = 2
+#         Limit = 0
+#
+#         for k in range(int(np.sum(nlinkVal) - 1)):
+#             if linkVal[k + 1] != 0:
+#                 if k <= np.sum(nlinkVal[:Limit+1]) - 1:
+#                     pass
+#                 elif Limit < len(LinkSpac)-1:
+#                     Limit += 1
+#
+#                 Space = np.linspace(linkVal[k], linkVal[k + 1], PileDiv[Limit] + 1)
+#
+#                 for l in range(int(len(Space) - 1)):
+#                     pile_V.append(Space[l])
+#                     cont += 1
+#
+#         pile_V.append(Space[-1])
+#         pile_V.append(Apoyos_Pil[i])
+#         Pile_V[f"{i}"] = np.array(pile_V)
+#
+#     return Pile_V
+
+
+
+
 VarLink, Nlink = linkDic(MasaPilvc, Fil_Masv, Apoyos_Pil, LinkSpac, LinkLim, Ly, NvTERR, Pend)
 
-print(VarLink, Nlink)
+Pile_Vc = generate_piles(Apoyos_Pil, VarLink, Nlink, LinkSpac, Lz, LongDes, PileDiv)
+
+
+print(Pile_Vc)
