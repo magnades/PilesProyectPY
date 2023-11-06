@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def generate_pilescoord(Apoyos_Pil, Link_V, NlinkV, LinkSpac, Lz, LongDes, PileDiv):
     num_pilotes = Link_V.__len__()
 
@@ -273,5 +272,25 @@ def generate_frames(Coord, Col_Masvc, Fil_Masvg):
             "F_VBORDE": np.array(F_VBORDE)}
 
     return Frames
+
+
+def generate_slab(Coord, Ly, N):
+
+    # Crear una matriz MatPuntos
+    MatPuntos = []
+
+    for i in range(len(Ly)):
+        for j in range((N - 1) * 3):
+            fila = []
+            for k in range(2):
+                for l in range(2):
+                    fila.append(Coord["x_coords"][j + l])
+                    fila.append(Coord["y_coords"][i + k])
+                    fila.append(Coord["z_coords"][i,k])
+            MatPuntos.append(fila)
+
+    MatPuntos = np.array(MatPuntos)
+
+    return MatPuntos
 
 
